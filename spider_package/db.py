@@ -5,7 +5,7 @@ import MySQLdb
 
 def connect_db():
 
-    db = MySQLdb.connect('localhost', 'root', '123456', 'jia')
+    db = MySQLdb.connect('localhost', 'root', 'jJ@123456', 'spider')
 
     cursor = db.cursor()
 
@@ -19,10 +19,9 @@ def connect_db():
 
 def insertData(data):
     db, cursor = connect_db()
-    url = data['url']
-    title = data['title']
-    sql = "INSERT INTO spider_test(url, title) \
-            VALUES ('%s', '%s') " % (url, title)
+    insert_data = data['data']
+    sql = "INSERT INTO spider_data(data) \
+            VALUES ('%s') " % (insert_data)
 
     try:
         cursor.execute(sql)
@@ -34,6 +33,6 @@ def insertData(data):
     db.close()
 
 if __name__ == '__main__':
-    insertData({'url':'www', 'title': 'zhu'})
+	insertData({'data':'titlezhu'})
 
 
