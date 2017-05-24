@@ -4,6 +4,7 @@ import traceback
 import re
 
 import config
+import db
 
 class SpiderMain(object):
 
@@ -39,6 +40,7 @@ class SpiderMain(object):
 
                 self.urls.add_new_urls(new_urls)
                 self.output.collect_data(new_data)
+                db.insertData(new_data)
 
             except Exception, e:
                 print 'craw failed '

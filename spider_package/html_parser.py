@@ -22,7 +22,10 @@ class HtmlParser(object):
             full_url = ''
 
             if self.urlReg['urlRegType'] == 2:
-                full_url = urlparse.urljoin(url, new_url)
+                if self.urlRreg['urlFull']:
+                    full_url = urlparse.urljoin(self.urlReg['urlFull'], new_url)
+                else:
+                    full_url = urlparse.urljoin(url, new_url)
             else:
                 full_url = new_url
                 
@@ -36,9 +39,16 @@ class HtmlParser(object):
 
         new_data['url'] = url
 
-        # title_node = soup.find('div', class_='dRow').find('h2', class_='title show-title')
-    #    new_data['title'] = title_node.get_text()
-        new_data['title'] = ''
+        title_node = soup.find('div', class_='dRow')
+
+        if title_node:
+            node_detail = title_node.find('h2', class_='title show-title')
+            if node_detail:
+                new_data['title'] = title_node.get_text()
+            else:
+                new_data['title'] = ''
+        else:
+            new_data['title'] = ''
 
 
         return new_data

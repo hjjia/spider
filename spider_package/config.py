@@ -1,10 +1,12 @@
 # coding:utf8
+import re
 
 options = {
     'root_url': 'http://www.juooo.com',
     'max_count': 1000,
     'urlReg': {
         'urlRegType': 1,
+        'urlFull': '',
         'urlStr': 'http://(\w+).juooo.com/\w+'
     },
     'urlData': {}
@@ -21,8 +23,7 @@ def initOptions():
     print '请输入最大收集条数，大于0的正整数, 0默认收集%d条' % options['max_count']
     max_count = raw_input('最大收集条数:')
     if max_count and int(max_count) > 1:
-        print 'bbbb'
-        options['max_count'] = max_count
+        options['max_count'] = int(max_count)
 
     print '\n'
     print '================================='
@@ -34,20 +35,28 @@ def initOptions():
     print urlType
 
     urlStr = ''
+    urlFull = ''
     urlRe = r'^http(s?)://(\w+.+)\w' 
-    if urlType == 2:
-        urlStr = raw_input('请输入urlStr:')
-        options['urlReg']['urlStr'] = urlStr
-        options['urlReg']['urlRegType'] = urlType
 
-    elif urlType == 1 :
+    if urlType and int(urlType) == 2:
+        urlFull = raw_input('请输入带完整域名的urlFull:')
+        urlTest = re.match(urlRe, urlFull)
+
+        if not (urlTest) is None:
+            options['urlReg']['urlFull'] = urlFull
+ 
+        urlStr = raw_input('请输入需要查找的urlStr:')
+        options['urlReg']['urlStr'] = urlStr
+        options['urlReg']['urlRegType'] = int(urlType)
+
+    elif urlType and int(urlType) == 1 :
         while True:
             urlStr = raw_input('请输入带完整域名的urlStr:')
             urlTest = re.match(urlRe, urlStr)
 
             if not (urlTest) is None:
                 options['urlReg']['urlStr'] = urlStr
-                options['urlReg']['urlRegType'] = urlType
+                options['urlReg']['urlRegType'] = int(urlType)
                 break
     
     return options
