@@ -2,6 +2,7 @@
 import url_manage, html_download, html_parser, html_output
 import traceback
 import re
+import redis_config
 
 import config
 import db
@@ -16,6 +17,7 @@ class SpiderMain(object):
         self.download = html_download.HtmlDownload()
         self.parser = html_parser.HtmlParser(options['urlReg'], options['urlData'])
         self.output = html_output.HtmlOutput()
+        self.redis = redis_config.CRedis()
 
 
     def craw(self):
@@ -40,7 +42,9 @@ class SpiderMain(object):
 
                 self.urls.add_new_urls(new_urls)
                 self.output.collect_data(new_data)
-                db.insertData(new_data)
+#db.insertData(new_data)
+                
+                self.redis.setData(new_data)
 
             except Exception, e:
                 print 'craw failed '
