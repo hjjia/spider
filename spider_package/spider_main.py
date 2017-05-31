@@ -44,7 +44,7 @@ class SpiderMain(object):
                 self.output.collect_data(new_data)
 #db.insertData(new_data)
                 
-                self.redis.setData(new_data)
+                self.redis.setData('spider_list', new_data)
 
             except Exception, e:
                 print 'craw failed '

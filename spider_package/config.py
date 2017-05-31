@@ -9,7 +9,7 @@ options = {
         'urlFull': '',
         'urlStr': 'http://(\w+).juooo.com/\w+'
     },
-    'urlData': {}
+    'urlData': []
 }
 
 def initOptions():
@@ -58,6 +58,20 @@ def initOptions():
                 options['urlReg']['urlStr'] = urlStr
                 options['urlReg']['urlRegType'] = int(urlType)
                 break
-    
+
+    # 输入需要配置的数据项
+    print '请输入配置项，每一个配置项标签名和class名'
+    num = 1
+    while True:
+        itemTag = raw_input('请输入数据项' + num +'的标签名 ')
+        itemClass = raw_input('请输入数据项' + num +'的class ')
+
+        options.urlData[num].itemTag = itemTag
+        options.urlData[num].itemName = itemClass
+        
+        if (not (itemTag) is None or not (itemClass) is None) and num != 1:
+            break
+        num = num + 1
+        
     return options
  

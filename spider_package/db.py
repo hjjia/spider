@@ -2,10 +2,14 @@
 import traceback
 
 import MySQLdb
+import redis_config
+
+redisCs = redis_config.CRedis()
 
 def connect_db():
 
-    db = MySQLdb.connect('localhost', 'root', 'jJ@123456', 'spider')
+# db = MySQLdb.connect('localhost', 'root', 'jJ@123456', 'spider')
+    db = MySQLdb.connect('localhost', 'root', '123456', 'spider')
 
     cursor = db.cursor()
 
@@ -19,20 +23,28 @@ def connect_db():
 
 def insertData(data):
     db, cursor = connect_db()
-    insert_data = data['data']
-    sql = "INSERT INTO spider_data(data) \
-            VALUES ('%s') " % (insert_data)
+    oldData = redisCs.getData('spider_list_old')
 
-    try:
-        cursor.execute(sql)
-        db.commit()
-    except Exception, e:
-        print traceback.print_exc()
-        db.rollback()
+    for item in data:
+        insert_data = item
+        sql = "INSERT INTO spider_data(data) \
+                VALUES ('%s') " % (insert_data)
+
+        try:
+            if item not in oldData:
+                cursor.execute(sql)
+                db.commit()
+            redisCs.delData(item)
+            redisCs.setData('spider_list_old', item)
+
+        except Exception, e:
+            print traceback.print_exc()
+            db.rollback()
 
     db.close()
 
 if __name__ == '__main__':
-	insertData({'data':'titlezhu'})
+    datas = redisCs.getData('spider_list')
+    insertData(datas)
 
 

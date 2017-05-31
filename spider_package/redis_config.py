@@ -12,15 +12,24 @@ class CRedis:
         self.db = 0
         self.r = redis.Redis(host = self.host, port = self.port, db = self.db)
 
-    def setData(self, data):
+    def setData(self, setName, data):
         convert_data = json.dumps(data)
         try:
-            self.r.sadd('spider_list', convert_data)
+            self.r.sadd(setName, convert_data)
         except Exception,e:
             print 'add failed'
             print traceback.print_exc()
 
 
+    def getData(self, key):
+        data = self.r.smembers(key)
+        return data
+
+    def delData(self, data):	
+
+        self.r.srem('spider_list', data)
+
+
 if __name__ == '__main__':
     cs = CRedis()
-    cs.setData('ddd')
+    cs.setData('spider_list', 'ddd')
